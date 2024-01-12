@@ -1,5 +1,6 @@
 class PostsController < ApplicationController
-  before_action :authenticate_user!, only: [:create]  # Enforce authentication for create action
+  #before_action :authenticate_user!, only: [:create]  #
+  # Enforce authentication for create action
 
   def create
     post = current_user.posts.build(post_params)  # Associate post with current user
