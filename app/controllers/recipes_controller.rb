@@ -1,20 +1,43 @@
-class PostsController < ApplicationController
-  #before_action :authenticate_user!, only: [:create]  #
-  # Enforce authentication for create action
+class RecipesController < ApplicationController
+  before_action :authenticate_user!, only: [:create]
+
+  def index
+    recipes = Recipe.all
+    render json: recipes
+  end
+
+  def show
+    recipe = Recipe.find(params[:id])
+    render json: recipe
+  end
 
   def create
-    post = current_user.posts.build(post_params)  # Associate post with current user
-
-    if post.save
-      render json: post, status: :created
+    recipe = current_user.recipes.build(recipe_params)
+    if recipe.save
+      render json: recipe, status: :created
     else
-      render json: post.errors, status: :unprocessable_entity
+      render json: recipe.errors, status: :unprocessable_entity
     end
+  end
+
+  def update
+    recipe = Recipe.find(params[:id])
+    if recipe.update(recipe_params)
+      render json: recipe
+    else
+      render json: recipe.errors, status: :unprocessable_entity
+    end
+  end
+
+  def destroy
+    recipe = Recipe.find(params[:id])
+    recipe.destroy
+    head :no_content
   end
 
   private
 
-  def post_params
-    params.require(:post).permit(:title, :desc)  # Exclude user_id as it's set from current_user
+  def recipe_params
+    params.require(:recipe).permit(:title, :description, :instructions)
   end
 end
