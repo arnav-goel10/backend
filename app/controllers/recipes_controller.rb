@@ -12,7 +12,6 @@ class RecipesController < ApplicationController
   end
 
   def create
-
     recipe = current_user.recipes.build(recipe_params)
     if recipe.save
       render json: recipe, status: :created
